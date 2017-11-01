@@ -1,0 +1,7 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+skip_files:
+- secrets
+- xml-notificator-691d66e876db.json
