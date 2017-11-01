@@ -112,8 +112,8 @@ def main():
         if present is True:
             exit(0)
         else:
-            saveInDB(clean['name'], clean['season'], clean['episode'], entry.link, entry.title)
             sendEmail(clean['name'], clean['season'], clean['episode'], entry.link)
+            saveInDB(clean['name'], clean['season'], clean['episode'], entry.link, entry.title)
 
 if __name__ == "__main__":
     main()
