@@ -3,6 +3,7 @@ import re
 import os
 import smtplib
 import feedparser
+import logging
 from datetime import datetime
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
@@ -95,8 +96,8 @@ def sendEmail(name, season, episode, url):
         text = msg.as_string()
         server.sendmail(fromaddr, toaddr, text)
         server.quit()
-    except:
-        print('Fail to send email')
+    except Exception as e:
+        logging.exception(e, "Fail to send email")
         exit(1)
 
 
@@ -113,6 +114,7 @@ def main():
             exit(0)
         else:
             sendEmail(clean['name'], clean['season'], clean['episode'], entry.link)
+            # --todo add login
             saveInDB(clean['name'], clean['season'], clean['episode'], entry.link, entry.title)
 
 if __name__ == "__main__":
