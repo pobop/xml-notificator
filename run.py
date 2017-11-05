@@ -17,12 +17,14 @@ def cleanTitle(title):
     return {'name': searchReg.group(1), 'season': searchReg.group(2), 'episode': searchReg.group(3)}
 
 
-def checkIfPresentDB(link):
+def checkIfPresentDB(serieName,episode,season):
 
     datastore_client = datastore.Client()
 
     query = datastore_client.query(kind='follow')
-    query.add_filter('link', '=', link)
+    query.add_filter('serie_name', '=', serieName)
+    query.add_filter('episode', '=', episode)
+    query.add_filter('season', '=', season)
     results = list(query.fetch())
 
     if len(results) == 0:
@@ -79,8 +81,8 @@ def sendEmail(name, season, episode, url):
             </tr>
             <tr>
                 <td>{0}</td>
-                <td>{1}</td>
                 <td>{2}</td>
+                <td>{1}</td>
                 <td><a href={3}>link</a></td>
             </tr>
         </table>
@@ -108,13 +110,12 @@ def main():
 
     for entry in d.entries:
         clean = cleanTitle(entry.title)
-        present = checkIfPresentDB(entry.link)
-        
+        present = checkIfPresentDB(clean['name'], clean['episode'], clean['season'])
+                
         if present is True:
             exit(0)
         else:
             sendEmail(clean['name'], clean['season'], clean['episode'], entry.link)
-            # --todo add login
             saveInDB(clean['name'], clean['season'], clean['episode'], entry.link, entry.title)
 
 if __name__ == "__main__":
